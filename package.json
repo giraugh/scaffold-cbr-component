@@ -3,6 +3,7 @@
 	"displayName": "scaffold-cbr-component",
 	"description": "Scaffold a create-benji-react component",
 	"version": "0.0.1",
+	"repository": "https://github.com/giraugh/scaffold-cbr-component",
 	"engines": {
 		"vscode": "^1.68.0"
 	},
