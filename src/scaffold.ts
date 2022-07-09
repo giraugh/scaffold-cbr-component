@@ -44,7 +44,7 @@ export const scaffoldComponent = async (source: Source = {}) => {
     if (existsSync(indexFilePath)) {
       const doAddToIndex = (await vscode.window.showInformationMessage('Add component to index.js file?', 'Yes Please', 'No Thanks')) === 'Yes Please'
       if (doAddToIndex) {
-        await appendFile(indexFilePath, `export { default as ${componentName} } from './${componentName}/${componentFileName}'`)
+        await appendFile(indexFilePath, `export { default as ${componentName} } from './${componentName}/${componentFileName}\n'`)
       }
     }
   }
