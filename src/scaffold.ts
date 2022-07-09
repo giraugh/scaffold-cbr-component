@@ -55,7 +55,7 @@ const createComponentFile = (name: string): string => {
     `import { Container } from './${styleFile(name)}'`,
     '',
     `const ${name} = () => <Container>`,
-    '\t',
+    '  ',
     `</Container>`,
     '',
     `export default ${name}`,
