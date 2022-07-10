@@ -2,7 +2,7 @@
   "name": "scaffold-cbr-component",
   "displayName": "Scaffold CBR Component",
   "description": "Scaffold a create-benji-react component",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": "https://github.com/giraugh/scaffold-cbr-component",
   "publisher": "giraugh",
   "engines": {
