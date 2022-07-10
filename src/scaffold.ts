@@ -44,7 +44,7 @@ export const scaffoldComponent = async (source: Source = {}) => {
     if (existsSync(indexFilePath)) {
       const doAddToIndex = (await vscode.window.showInformationMessage('Add component to index.js file?', 'Yes Please', 'No Thanks')) === 'Yes Please'
       if (doAddToIndex) {
-        await appendFile(indexFilePath, `export { default as ${componentName} } from './${componentName}/${componentFileName}\n'`)
+        await appendFile(indexFilePath, `export { default as ${componentName} } from './${componentName}/${componentFileName}'\n`)
       }
     }
   }
@@ -52,13 +52,14 @@ export const scaffoldComponent = async (source: Source = {}) => {
 
 const createComponentFile = (name: string): string => {
   return [
-    `import { Container } from './${styleFile(name)}'`,
+    `import { Container } from './${styleFile(name, false)}'`,
     '',
     `const ${name} = () => <Container>`,
     '  ',
     `</Container>`,
     '',
     `export default ${name}`,
+    '',
   ].join('\n')
 }
 
@@ -67,8 +68,9 @@ const createStyleFile = (): string => {
     `import { styled } from 'goober'`,
     '',
     `export const Container = styled('div')\`\``,
+    '',
   ].join('\n')
 }
 
-const styleFile = (name: string): string =>
-  `${name.charAt(0).toLowerCase()}${name.slice(1)}Style.js`
+const styleFile = (name: string, ext: boolean = true): string =>
+  `${name.charAt(0).toLowerCase()}${name.slice(1)}Style${ext ? '.js' : ''}`
