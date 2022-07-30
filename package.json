@@ -16,6 +16,21 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Scaffold CBR Component",
+      "properties": {
+        "scaffold-cbr-component.componentFilePattern": {
+          "type": "string",
+          "default": "$Component.jsx",
+          "markdownDescription": "Pattern for specifying component file name. Use `$component` for component name and `$Component` for capitalized component name."
+        },
+        "scaffold-cbr-component.stylesFilePattern": {
+          "type": "string",
+          "default": "$Component.styles.js",
+          "markdownDescription": "Pattern for specifying component styles file name. Use `$component` for component name and `$Component` for capitalized component name."
+        }
+      }
+    },
     "menus": {
       "explorer/context": [
         {

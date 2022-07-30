@@ -32,8 +32,8 @@ export const scaffoldComponent = async (source: Source = {}) => {
 
     // Create component files
     console.log(`Creating files for ${componentName} component`)
-    const componentFileName = `${componentName}.js`
-    const styleFileName = styleFile(componentName)
+    const componentFileName = makeComponentFileName(componentName)
+    const styleFileName = makeStylesFileName(componentName)
     await Promise.all([
       writeFile(join(componentDir, componentFileName), createComponentFile(componentName)),
       writeFile(join(componentDir, styleFileName), createStyleFile()),
@@ -44,21 +44,24 @@ export const scaffoldComponent = async (source: Source = {}) => {
     if (existsSync(indexFilePath)) {
       const doAddToIndex = (await vscode.window.showInformationMessage('Add component to index.js file?', 'Yes Please', 'No Thanks')) === 'Yes Please'
       if (doAddToIndex) {
-        await appendFile(indexFilePath, `export { default as ${componentName} } from './${componentName}/${componentName}'\n`)
+        await appendFile(
+          indexFilePath,
+          `export { default as ${componentName} } from './${componentName}/${makeComponentFileName(componentName, false)}'\n`
+        )
       }
     }
   }
 }
 
-const createComponentFile = (name: string): string => {
+const createComponentFile = (componentName: string): string => {
   return [
-    `import { Container } from './${styleFile(name, false)}'`,
+    `import { Container } from './${makeStylesFileName(componentName, false)}'`,
     '',
-    `const ${name} = () => <Container>`,
+    `const ${componentName} = () => <Container>`,
     '  ',
     `</Container>`,
     '',
-    `export default ${name}`,
+    `export default ${componentName}`,
     '',
   ].join('\n')
 }
@@ -72,5 +75,22 @@ const createStyleFile = (): string => {
   ].join('\n')
 }
 
-const styleFile = (name: string, ext: boolean = true): string =>
-  `${name.charAt(0).toLowerCase()}${name.slice(1)}Style${ext ? '.js' : ''}`
+const makeComponentFileName = (componentName: string, ext: boolean = true): string => {
+  const pattern: string = vscode.workspace.getConfiguration('scaffold-cbr-component').get('componentFilePattern') ?? '$Component.jsx'
+  return applyPattern(componentName, pattern, ext)
+}
+
+const makeStylesFileName = (componentName: string, ext: boolean = true): string => {
+  const pattern: string = vscode.workspace.getConfiguration('scaffold-cbr-component').get('stylesFilePattern') ?? '$Component.styles.js'
+  return applyPattern(componentName, pattern, ext)
+}
+
+const applyPattern = (componentName: string, pattern: string, ext: boolean = true): string => {
+  const componentNameCamel = `${componentName.charAt(0).toLowerCase()}${componentName.slice(1)}`
+  const fileName = pattern
+    .replaceAll('$component', componentNameCamel)
+    .replaceAll('$Component', componentName)
+  return ext
+    ? fileName
+    : fileName.split('.').slice(0, -1).join('.')
+}
